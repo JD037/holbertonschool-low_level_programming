@@ -1,4 +1,4 @@
-#include<stdio.h>
+#include <stdio.h>
 
 /**
  * main - displays zero through nine.
@@ -7,13 +7,13 @@
  */
 int main(void)
 {
-	int j;
+	int x;
 
-	for (j = 0; j <= 9; j++)
+	for (x = 0; x <= 9; x++)
 	{
-		putchar(j);
+		printf("%d", x);
 	}
-	putchar('\n');
-	return (0);
+printf("\n");
+return (0);
 }
 
