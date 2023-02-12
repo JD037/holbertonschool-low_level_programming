@@ -9,7 +9,7 @@ char *leet(char *s)
 {
 	int i, j;
 	char letters[10] = {'a', 'A', 'e', 'E', 'o', 'O', 't', 'T', 'l', 'L'};
-	int numbers[10] = {52, 52, 51, 51, 48, 48, 55, 55, 49, 49};
+	int numbers[10] = {'4', '4', '3', '3', '0', '0', '7', '7', '1', '1'};
 
 	for (i = 0; s[i] != '\0'; i++)
 	{
@@ -17,8 +17,7 @@ char *leet(char *s)
 		{
 			if (s[i] == letters[j])
 			{
-				s[i] = numbers[j] / 10 + '0';
-				s[i + 1] = numbers[j] % 10 + '0';
+				s[i] = numbers[j];
 				break;
 			}
 		}
