@@ -11,6 +11,6 @@ void _print_rev_recursion(char *s)
 	if (*s == '\0') /* base case: end of string */
 		return;
 
-	_print_rev_recursion(s + 1); /* recursive call: print the rest of the string */
+	_print_rev_recursion(s + 1); /* recursive call: print rest of the string */
 	_putchar(*s); /* print the current character */
 }
