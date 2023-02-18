@@ -1,4 +1,4 @@
-#include "holberton.h"
+#include "main.h"
 /**
  * _strncat - concatenate strings using at most 'n' bytes from "src".
  * @dest: string to be added to
