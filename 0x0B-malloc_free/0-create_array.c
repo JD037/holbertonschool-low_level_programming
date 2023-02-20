@@ -21,7 +21,7 @@ char *create_array(unsigned int size, char c)
 	if (arr == NULL) /* Check if malloc failed */
 		return (NULL); /* If malloc failed, return NULL */
 
-	for (unsigned int i = 0; i < size; i++) /* Loopeach elementinthearray */
+	for (i = 0; i < size; i++) /* Loopeach elementinthearray */
 		arr[i] = c; /* Set value of each element to the given char */
 
 	return (arr); /* Return a pointer to the array */
