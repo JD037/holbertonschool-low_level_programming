@@ -19,11 +19,11 @@ dog_t *new_dog(char *name, float age, char *owner)
 	if (new_dog == NULL) /* check if memory allocation was successful */
 		return (NULL);
 
-	for (name_len = 0; name[name_len] != '\0'; name_len++);
-	/* get length of name string */
+	for (name_len = 0; name[name_len] != '\0'; name_len++)
+		;/* get length of name string */
 
-	for (owner_len = 0; owner[owner_len] != '\0'; owner_len++);
-	/* get length of owner string */
+	for (owner_len = 0; owner[owner_len] != '\0'; owner_len++)
+		;/* get length of owner string */
 
 	new_dog->name = malloc(sizeof(char) * (name_len + 1)); /* allocate memory */
 	if (new_dog->name == NULL) /* check if memory allocation was successful */
