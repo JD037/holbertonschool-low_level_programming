@@ -28,7 +28,8 @@ int main(int argc, char **argv)
 
 	f = get_op_func(operator);
 
-	if (f == NULL || ((*operator == '/' || *operator == '%') && b == 0) || (*operator == '\0' && operator[1] != '\0'))
+	if (f == NULL || ((*operator == '/' || *operator == '%') && b == 0) || \
+			(*operator == '\0' && operator[1] != '\0'))
 	{
 		printf("Error\n");
 		exit(99);
