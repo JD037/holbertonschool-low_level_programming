@@ -11,11 +11,9 @@
  *	or invalid operator is passed
  */
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-	int a, b, res;
-	char *operator;
-	int (*f)(int, int);
+	int (*func)(int, int);
 
 	if (argc != 4)
 	{
@@ -23,21 +21,13 @@ int main(int argc, char **argv)
 		exit(98);
 	}
 
-	a = atoi(argv[1]);
-	b = atoi(argv[3]);
-	operator = argv[2];
-
-	f = get_op_func(operator);
-
-	if (f == NULL || ((*operator == '/' || *operator == '%') && b == 0) || \
-			(*operator == '\0' && operator[1] != '\0'))
+	func = get_op_func(argv[2]);
+	if (func == NULL)
 	{
 		printf("Error\n");
 		exit(99);
 	}
 
-	res = f(a, b);
-	printf("%d\n", res);
-
+	printf("%d\n", func(atoi(argv[1]), atoi(argv[3])));
 	return (0);
 }
