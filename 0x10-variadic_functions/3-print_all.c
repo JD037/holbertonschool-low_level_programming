@@ -17,57 +17,38 @@
 void print_all(const char * const format, ...)
 {
 	va_list args;
-	unsigned int i = 0, j = 0;
-	char *separator = "";
-
-	/* list of data types */
-	dt_t data_type[] = {
-		{'c', "%c"},
-		{'i', "%d"},
-		{'f', "%f"},
-		{'s', "%s"}
-	};
+	int i = 0;
+	char *s;
+	char *sep = "";
 
 	va_start(args, format);
 
-	/* while loop to go through format string */
 	while (format && format[i])
 	{
-		/* initialize variable */
-		j = 0;
-		/* inner while loop to compare data types */
-		while (j < 4)
+		switch (format[i])
 		{
-			if (format[i] == data_type[j].type)
-			{
-				/* print separator */
-				printf("%s", separator);
-				/* switch statement to print correct data type */
-				switch (format[i])
-				{
-					case 'c':
-						printf(data_type[j].f, va_arg(args, int));
-						break;
-					case 'i':
-						printf(data_type[j].f, va_arg(args, int));
-						break;
-					case 'f':
-						printf(data_type[j].f, va_arg(args, double));
-						break;
-					case 's':
-						printf("%s", va_arg(args, char *));
-						if (!va_arg(args, char *))
-							printf("(nil)");
-						break;
-				}
-				separator = ", ";
+			case 'c':
+				printf("%s%c", sep, va_arg(args, int));
 				break;
-			}
-			j++;
+			case 'i':
+				printf("%s%d", sep, va_arg(args, int));
+				break;
+			case 'f':
+				printf("%s%f", sep, va_arg(args, double));
+				break;
+			case 's':
+				s = va_arg(args, char *);
+				if (!s)
+					s = "(nil)";
+				printf("%s%s", sep, s);
+				break;
+			default:
+				i++;
+				continue;
 		}
+		sep = ", ";
 		i++;
 	}
-
 	printf("\n");
 	va_end(args);
-}
+}	
