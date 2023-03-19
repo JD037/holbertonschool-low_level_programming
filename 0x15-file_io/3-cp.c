@@ -55,10 +55,10 @@ int main(int argc, char *argv[])
 	sprintf(fd_to_str, "%d", fd_to); /* convert fd_to to string */
 
 	if (close(fd_from) == -1)
-		error("Error: Can't close fd %d\n", fd_from, 100);
+		error("Error: Can't close fd %d for %s\n", argv[1], errno);
 
 	if (close(fd_to) == -1)
-		error("Error: Can't close fd %d\n", fd_to, 100);
+		error("Error: Can't close fd %d for %s\n", argv[2], errno);
 
 	return (0);
 }
