@@ -27,6 +27,8 @@ int main(int argc, char *argv[])
 {
 	int fd_from, fd_to, n_read, n_write;
 	char buffer[BUFFER_SIZE];
+	char fd_from_str[10]; /* buffer for converting fd_from to string */
+	char fd_to_str[10]; /* buffer for converting fd_to to string */
 
 	if (argc != 3)
 		error("Usage: %s file_from file_to\n", argv[0], 97);
@@ -48,6 +50,9 @@ int main(int argc, char *argv[])
 
 	if (n_read == -1)
 		error("Error: Can't read from file %s\n", argv[1], 98);
+
+	sprintf(fd_from_str, "%d", fd_from); /* convert fd_from to string */
+	sprintf(fd_to_str, "%d", fd_to); /* convert fd_to to string */
 
 	if (close(fd_from) == -1)
 		error("Error: Can't close fd %d\n", fd_from, 100);
