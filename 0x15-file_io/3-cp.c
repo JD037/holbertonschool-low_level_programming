@@ -9,7 +9,7 @@
  * @file: The name of the file causing the error
  * @code: The exit code to use
  */
-void error(char *msg, char *file, int code)
+void error(const char *msg, char *file, int code)
 {
 	dprintf(STDERR_FILENO, msg, file);
 	exit(code);
