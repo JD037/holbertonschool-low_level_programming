@@ -1,64 +1,100 @@
 #include "main.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #define BUFFER_SIZE 1024
 
 /**
- * error - Print an error message and exit the program with a given code
+ * _copy_files- copies files from one file to another
+ * in 1024 byte chunks
+ * @from: file descriptor to copy from
+ * @to: file descriptor to copy to
+ * @argv: names of files
  *
- * @msg: The error message to print
- * @file: The name of the file causing the error
- * @code: The exit code to use
+ * Return: void return
  */
-void error(const char *msg, char *file, int code)
+void _copy_files(int from, int to, char **argv)
 {
-	dprintf(STDERR_FILENO, msg, file);
-	exit(code);
+	int buf, wr;
+	char str[BUFFER_SIZE];
+
+	buf = BUFFER_SIZE;
+	while (buf == BUFFER_SIZE)
+	{
+		buf = read(from, str, BUFFER_SIZE);
+		if (buf == -1)
+		{
+			dprintf(2, "Error: Can't read from file %s\n", argv[1]);
+			exit(98);
+		}
+
+		wr = write(to, str, buf);
+		if (wr == -1)
+		{
+			dprintf(2, "Error: Can't write to %s\n", argv[2]);
+			exit(99);
+		}
+	}
+
 }
 
 /**
- * main - Copy the contents of one file to another file
+ * _close_files- closes files
+ * @from: fd for from file
+ * @to: fd for to file
  *
- * @argc: The number of arguments passed to the program
- * @argv: An array of strings containing the arguments
- *
- * Return: 0 on success, 97-100 on failure
+ * Return: void return
  */
-int main(int argc, char *argv[])
+void _close_files(int from, int to)
 {
-	int fd_from, fd_to, n_read, n_write;
-	char buffer[BUFFER_SIZE];
-	char fd_from_str[10]; /* buffer for converting fd_from to string */
-	char fd_to_str[10]; /* buffer for converting fd_to to string */
+	if (close(from) == -1)
+	{
+		dprintf(2, "Error: Can't close fd %i\n", from);
+		exit(100);
+	}
+	if (close(to) == -1)
+	{
+		dprintf(2, "Error: Can't close fd %i\n", to);
+		exit(100);
+	}
+}
+
+/**
+ * main- copies contents from one file to another
+ * @argc: number of arguments
+ * @argv: value of arguments
+ * Usage : cp file_from file_to
+ * Return: 98 if file from is not accessable 99 if file_to
+ * creation or writing fails 100 if file cannot be closed
+ */
+int main(int argc, char **argv)
+{
+	int from, to;
 
 	if (argc != 3)
-		error("Usage: %s file_from file_to\n", argv[0], 97);
-
-	fd_from = open(argv[1], O_RDONLY);
-	if (fd_from == -1)
-		error("Error: Can't read from file %s\n", argv[1], 98);
-
-	fd_to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
-	if (fd_to == -1)
-		error("Error: Can't write to %s\n", argv[2], 99);
-
-	while ((n_read = read(fd_from, buffer, BUFFER_SIZE)) > 0)
 	{
-		n_write = write(fd_to, buffer, n_read);
-		if (n_write == -1)
-			error("Error: Can't write to %s\n", argv[2], 99);
+		dprintf(2, "Usage: %s file_from file_to\n", argv[0]);
+		exit(1);
 	}
 
-	if (n_read == -1)
-		error("Error: Can't read from file %s\n", argv[1], 98);
+	from = open(argv[1], O_RDONLY);
+	if (from == -1)
+	{
+		dprintf(2, "Error: Can't read from file %s\n", argv[1]);
+		exit(98);
+	}
 
-	sprintf(fd_from_str, "%d", fd_from); /* convert fd_from to string */
-	sprintf(fd_to_str, "%d", fd_to); /* convert fd_to to string */
+	to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
+	if (to == -1)
+	{
+		dprintf(2, "Error: Can't write to %s\n", argv[2]);
+		exit(99);
+	}
 
-	if (close(fd_from) == -1)
-		error("Error: Can't close fd %d for %s\n", argv[1], errno);
-
-	if (close(fd_to) == -1)
-		error("Error: Can't close fd %d for %s\n", argv[2], errno);
+	_copy_files(from, to, argv);
+	_close_files(from, to);
 
 	return (0);
 }
