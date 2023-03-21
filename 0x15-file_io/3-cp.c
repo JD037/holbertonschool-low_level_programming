@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	char fd_to_str[10]; /* buffer for converting fd_to to string */
 
 	if (argc != 3)
-		error("Usage: %s file_from file_to\n", argv[0], 97);
+		error("Usage: %s file_from file_to\n", "cp", 97);
 
 	fd_from = open(argv[1], O_RDONLY);
 	if (fd_from == -1)
