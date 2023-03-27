@@ -1,69 +1,63 @@
 #include "hash_tables.h"
 
 /**
- * hash_table_set - Adds an element to the hash table.
- * @ht: Pointer to the hash table to add or update the key/value to.
- * @key: The key. Cannot be an empty string.
- * @value: The value associated with the key. Must be duplicated.
- *
- * Return: 1 if it succeeded, 0 otherwise.
+ * free_node - Free a node.
+ * @node: Node to free.
+ * Return: Void.
+ */
+void free_node(hash_node_t *node)
+{
+	free(node->key);
+	free(node->value);
+	free(node);
+}
+
+/**
+ * hash_table_set - Set a value in the hash table.
+ * @ht: Hash table.
+ * @key: Key to be indexed.
+ * @value: Value to set in the hash table.
+ * Return: 1 if works, 0 if doesn't.
  */
 int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 {
 	unsigned long int index;
-	hash_node_t *new_node;
+	hash_node_t *new_node, *current;
 
-	/* Check if the hash table or the key are NULL */
-	if (ht == NULL || key == NULL || strlen(key) == 0)
+	if (key == NULL || ht == NULL || value == NULL)
 		return (0);
-
-	/* Get the index where to store the key/value pair */
-	index = key_index((unsigned char *)key, ht->size);
-
-	/* Create a new node and check if memory allocation fails */
+	index = key_index((const unsigned char *)key, ht->size);
 	new_node = malloc(sizeof(hash_node_t));
 	if (new_node == NULL)
 		return (0);
-
-	/* Fill the new node with the key/value pair */
-	new_node->key = strdup(key);
-	if (new_node->key == NULL)
-	{
-		free(new_node);
-		return (0);
-	}
-	new_node->value = strdup(value);
-	if (new_node->value == NULL)
-	{
-		free(new_node->key);
-		free(new_node);
-		return (0);
-	}
-
-	/* Initialize the next pointer to NULL */
+	new_node->key = strdup((char *)key);
+	new_node->value = strdup((char *)value);
 	new_node->next = NULL;
-
-	/* Check if the key already exists in the hash table */
-	current = ht->array[index];
-	while (current != NULL)
+	if (ht->array[index] == NULL)
+		ht->array[index] = new_node;
+	else
 	{
+		current = ht->array[index];
 		if (strcmp(current->key, key) == 0)
 		{
-			/* Update the value and free the new node */
-			free(new_node->key);
-			free(new_node->value);
-			free(new_node);
-			current->value = strdup(value);
-			if (current->value == NULL)
-				return (0);
+			new_node->next = current->next;
+			ht->array[index] = new_node;
+			free_node(current);
 			return (1);
 		}
-		current = current->next;
+		while (current->next != NULL && strcmp(current->next->key, key) != 0)
+			current = current->next;
+		if (strcmp(current->key, key) == 0)
+		{
+			new_node->next = current->next->next;
+			free_node(current->next);
+			current->next = new_node;
+		}
+		else
+		{
+			new_node->next = ht->array[index];
+			ht->array[index] = new_node;
+		}
 	}
-
-	/* Add the new node at the beginning of the list at the index */
-	new_node->next = ht->array[index];
-	ht->array[index] = new_node;
-
 	return (1);
 }
