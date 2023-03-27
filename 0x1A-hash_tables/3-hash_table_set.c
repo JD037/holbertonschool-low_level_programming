@@ -40,6 +40,27 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 		return (0);
 	}
 
+	/* Initialize the next pointer to NULL */
+	new_node->next = NULL;
+
+	/* Check if the key already exists in the hash table */
+	current = ht->array[index];
+	while (current != NULL)
+	{
+		if (strcmp(current->key, key) == 0)
+		{
+			/* Update the value and free the new node */
+			free(new_node->key);
+			free(new_node->value);
+			free(new_node);
+			current->value = strdup(value);
+			if (current->value == NULL)
+				return (0);
+			return (1);
+		}
+		current = current->next;
+	}
+
 	/* Add the new node at the beginning of the list at the index */
 	new_node->next = ht->array[index];
 	ht->array[index] = new_node;
