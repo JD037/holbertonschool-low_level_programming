@@ -2,6 +2,10 @@
 #define HASH_TABLES_H
 
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <stddef.h>
+
 
 /**
  * struct hash_node_s - A structure to store key-value pairs in the hash
